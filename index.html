@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Moved</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulmaswatch/0.8.1/darkly/bulmaswatch.min.css" integrity="sha512-lLXTQR9X0YWtbfqUt47t7cXs2b7SWbMqGD4YdOYkCXDeTCm4+Mm84OhHl/pz2sd6ievpE+VE+/qdtvJE8uhcdA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.14/vue.min.js" integrity="sha512-XdUZ5nrNkVySQBnnM5vzDqHai823Spoq1W3pJoQwomQja+o4Nw0Ew1ppxo5bhF2vMug6sfibhKWcNJsG8Vj9tg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+      window.onload = () => {
+        new Vue({
+          el: '#app',
+          data() {
+            return {
+              // settings
+              newLocation: 'https://example.com/',
+              redirectTimer: 15,
+
+              // variables
+              canceled: false,
+              location: window.location.href.replace('index.html', ''),
+            };
+          },
+          mounted() {
+            this.count();
+          },
+          methods: {
+            count() {
+              if (this.canceled) return;
+              if (this.redirectTimer === 0) this.redirectNow();
+              else {
+                this.redirectTimer -= 1;
+                setTimeout(this.count.bind(this), 1000);
+              }
+            },
+            cancel() {
+              this.canceled = true;
+            },
+            redirectNow() {
+              window.location.href = this.newLocation;
+
+              // replace: Visitors will not be able to return to this page.
+              // window.location.replace(this.newLocation);
+            },
+          },
+        });
+      };
+    </script>
+  </head>
+  <body>
+    <div id="app" class="container">
+      <section class="section">
+        <div class="content">
+          <h1 class="title">This page has been moved</h1>
+          <p>Please update your bookmark.</p>
+          <p>
+            Old (You have accessed) : {{ location }}<br>
+            New : <strong>{{ newLocation }}</strong>
+          </p>
+          <br>
+          <div class="notification">
+            <div class="block">You will be redirected after <strong>{{ redirectTimer }}</strong> seconds.<br></div>
+            <div class="block">
+              <button @click="redirectNow" class="button is-link">Redirect Now</button>
+              <button @click="cancel" :disabled="canceled" class="button">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
